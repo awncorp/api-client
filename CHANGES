@@ -1,5 +1,9 @@
 Changelog for API-Client
 
-0.01 2015-09-27T22:05:10
+0.02 2015-09-28T13:00:08
+ - Updated the dist.ini file.
+
+0.01 2015-09-27T22:05:15
+ - v0.01
  - Updated build.
  - Initial commit.
