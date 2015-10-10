@@ -424,7 +424,7 @@ should be formatted.
 The credentials attribute sets the pre-configured Credentials object
 that, if defined, will be used to modify the Transaction object to include
 authentication credentials. This attribute expects an object derived from the
-API::Client::Credentials class.
+L<API::Client::Credentials> class.
 
 =cut
 
