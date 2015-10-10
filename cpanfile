@@ -1,6 +1,5 @@
 requires "Data::Object" => "0.55";
 requires "Mojolicious" => "6.08";
-requires "namespace::autoclean" => "0.27";
 requires "perl" => "v5.14.0";
 
 on 'test' => sub {

@@ -19,10 +19,9 @@ my %WriteMakefileArgs = (
   "NAME" => "API::Client",
   "PREREQ_PM" => {
     "Data::Object" => "0.55",
-    "Mojolicious" => "6.08",
-    "namespace::autoclean" => "0.27"
+    "Mojolicious" => "6.08"
   },
-  "VERSION" => "0.02",
+  "VERSION" => "0.03",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -32,8 +31,7 @@ my %WriteMakefileArgs = (
 my %FallbackPrereqs = (
   "Data::Object" => "0.55",
   "ExtUtils::MakeMaker" => 0,
-  "Mojolicious" => "6.08",
-  "namespace::autoclean" => "0.27"
+  "Mojolicious" => "6.08"
 );
 
 

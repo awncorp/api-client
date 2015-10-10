@@ -4,15 +4,13 @@ NAME
 
 VERSION
 
-    version 0.02
+    version 0.03
 
 SYNOPSIS
 
         use API::Client;
-        use Mojo::URL;
     
-        my $url = "https://api.example.com";
-        my $client = API::Client->new(url => Mojo::URL->new($url));
+        my $client = API::Client->new(url => "https://api.example.com");
     
         $client->debug(1);
         $client->fatal(1);
@@ -215,10 +213,29 @@ THIN CLIENT
 
 ATTRIBUTES
 
+ casing
+
+        $client->casing;
+        $client->casing('lowercase');
+
+    The casing attribute should be set to either lowercase, snakecase,
+    camelcase, pascalcase, or uppercase, which determines how URL segments
+    should be formatted.
+
+ credentials
+
+        $client->credentials;
+        $client->credentials(API::Client::Credentials->new(...));
+
+    The credentials attribute sets the pre-configured Credentials object
+    that, if defined, will be used to modify the Transaction object to
+    include authentication credentials. This attribute expects an object
+    derived from the API::Client::Credentials class.
+
  identifier
 
         $client->identifier;
-        $client->identifier('IDENTIFIER');
+        $client->identifier('API::Client (Perl)');
 
     The identifier attribute should be set to a string that identifies your
     application.

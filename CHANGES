@@ -1,6 +1,11 @@
 Changelog for API-Client
 
-0.02 2015-09-28T13:03:46
+0.03 2015-10-10T02:21:23
+ - Updated dependencies, exception handling, and added support for
+   credentials.
+
+0.02 2015-09-28T13:04:06
+ - v0.02
  - Updated build.
  - Updated the dist.ini file.
 
