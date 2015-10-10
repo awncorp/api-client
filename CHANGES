@@ -1,6 +1,7 @@
 Changelog for API-Client
 
-0.03 2015-10-10T02:21:23
+0.03 2015-10-10T02:25:10
+ - Updated build.
  - Updated dependencies, exception handling, and added support for
    credentials.
 
