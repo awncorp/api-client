@@ -1,15 +1,13 @@
 # Client Exception Class
 package API::Client::Exception;
 
-use namespace::autoclean -except => 'has';
-
 use Data::Object::Class;
-use Data::Object::Class::Syntax;
 use Data::Object::Signatures;
 
 use Data::Object::Library qw(
     InstanceOf
     Int
+    Maybe
     Str
 );
 
@@ -17,32 +15,53 @@ extends 'Data::Object::Exception';
 
 # VERSION
 
-our $MESSAGE = "%s response received while processing request %s %s";
-
 # ATTRIBUTES
 
-has code   => ro;
-has method => ro;
-has tx     => ro;
-has url    => ro;
+has code => (
+    is       => 'ro',
+    isa      => Maybe[Int],
+    required => 0,
+);
 
-# CONSTRAINTS
+has method => (
+    is       => 'ro',
+    isa      => Str,
+    required => 1,
+);
 
-req code   => Int;
-req method => Str;
-req tx     => InstanceOf['Mojo::Transaction'];
-req url    => InstanceOf['Mojo::URL'];
+has tx => (
+    is       => 'ro',
+    isa      => InstanceOf['Mojo::Transaction'],
+    required => 1,
+);
 
-# MODIFIERS
+has url => (
+    is       => 'ro',
+    isa      => InstanceOf['Mojo::URL'],
+    required => 1,
+);
 
-alt message => lazy;
+has '+message' => (
+    is       => 'ro',
+    isa      => Str,
+    required => 0,
+    lazy     => 1,
+    builder  => 'default_message',
+);
 
-# DEFAULTS
+# METHODS
 
-def message => method {
+method default_message {
 
-    sprintf "$MESSAGE\n", map "@{[$self->$_]}", qw(code method url);
+    my $code   = $self->code;
+    my $method = $self->method;
+    my $url    = $self->url;
 
-};
+    my $reason  = $code ? "response code $code" : "unexpected response";
+    my $message = "$reason received while processing the request $method $url";
+
+    return $message;
+
+}
 
 1;

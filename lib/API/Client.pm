@@ -1,13 +1,11 @@
 # ABSTRACT: General-Purpose API Client Abstraction
 package API::Client;
 
-use namespace::autoclean -except => 'has';
-
 use Data::Object::Class;
-use Data::Object::Class::Syntax;
 use Data::Object::Signatures;
 
 use Data::Object::Library qw(
+    InstanceOf
     Int
     Str
 );
@@ -21,25 +19,37 @@ use Scalar::Util ();
 
 # ATTRIBUTES
 
-has casing     => rw;
-has identifier => rw;
-has version    => rw;
+has casing => (
+    is       => 'rw',
+    isa      => Str,
+    default  => 'lowercase',
+    required => 0,
+);
 
-# CONSTRAINTS
+has credentials => (
+    is       => 'ro',
+    isa      => InstanceOf['API::Client::Credentials'],
+    required => 0,
+);
 
-opt casing     => Str;
-opt identifier => Str;
-opt version    => Str;
+has identifier => (
+    is       => 'rw',
+    isa      => Str,
+    default  => 'API::Client (Perl)',
+    required => 0,
+);
 
-# DEFAULTS
-
-def casing     => 'lowercase';
-def identifier => 'API::Client (Perl)';
-def version    => 0;
+has version => (
+    is       => 'rw',
+    isa      => Str,
+    default  => 0,
+    required => 0,
+);
 
 # METHOD-RESOLUTION
 
 method AUTOLOAD () {
+
     my @words = split /::/, our $AUTOLOAD;
 
     my $method  = pop @words;
@@ -78,11 +88,13 @@ method AUTOLOAD () {
 
     # return new resource instance dynamically
     return $self->resource($method, @results);
+
 }
 
 # CONSTRUCTION
 
 method BUILD () {
+
     my $ident = $self->identifier;
     my $agent = $self->user_agent;
 
@@ -90,11 +102,20 @@ method BUILD () {
     $agent->transactor->name($ident);
 
     return $self;
+
 }
 
 # METHODS
 
 method PREPARE ($ua, $tx, %args) {
+
+    if (my $credentials = $self->credentials) {
+
+        # process credentials
+        $credentials->process($tx);
+
+    }
+
     my $headers = $tx->req->headers;
     my $url     = $tx->req->url;
 
@@ -102,31 +123,41 @@ method PREPARE ($ua, $tx, %args) {
     $headers->header('Content-Type' => 'application/json');
 
     return $self;
+
 }
 
 method action ($method, %args) {
+
     $method = uc($method || 'get');
 
     # execute transaction and return response
     return $self->$method(%args);
+
 }
 
 method create (%args) {
+
     # execute transaction and return response
     return $self->POST(%args);
+
 }
 
 method delete (%args) {
+
     # execute transaction and return response
     return $self->DELETE(%args);
+
 }
 
 method fetch (%args) {
+
     # execute transaction and return response
     return $self->GET(%args);
+
 }
 
 method resource (@segments) {
+
     my $class = ref($self);
 
     # build new resource instance
@@ -150,11 +181,14 @@ method resource (@segments) {
 
     # return resource instance
     return $instance;
+
 }
 
 method update (%args) {
+
     # execute transaction and return response
     return $self->PUT(%args);
+
 }
 
 1;
@@ -164,10 +198,8 @@ method update (%args) {
 =head1 SYNOPSIS
 
     use API::Client;
-    use Mojo::URL;
 
-    my $url = "https://api.example.com";
-    my $client = API::Client->new(url => Mojo::URL->new($url));
+    my $client = API::Client->new(url => "https://api.example.com");
 
     $client->debug(1);
     $client->fatal(1);
@@ -373,10 +405,33 @@ uses convetions foreign to that of your codebase.
 
 =cut
 
+=attr casing
+
+    $client->casing;
+    $client->casing('lowercase');
+
+The casing attribute should be set to either C<lowercase>, C<snakecase>,
+C<camelcase>, C<pascalcase>, or C<uppercase>, which determines how URL segments
+should be formatted.
+
+=cut
+
+=attr credentials
+
+    $client->credentials;
+    $client->credentials(API::Client::Credentials->new(...));
+
+The credentials attribute sets the pre-configured Credentials object
+that, if defined, will be used to modify the Transaction object to include
+authentication credentials. This attribute expects an object derived from the
+API::Client::Credentials class.
+
+=cut
+
 =attr identifier
 
     $client->identifier;
-    $client->identifier('IDENTIFIER');
+    $client->identifier('API::Client (Perl)');
 
 The identifier attribute should be set to a string that identifies your
 application.
