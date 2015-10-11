@@ -6,7 +6,7 @@ API::Client - General-Purpose API Client Abstraction
 
 # VERSION
 
-version 0.03
+version 0.04
 
 # SYNOPSIS
 
@@ -227,7 +227,7 @@ should be formatted.
 The credentials attribute sets the pre-configured Credentials object
 that, if defined, will be used to modify the Transaction object to include
 authentication credentials. This attribute expects an object derived from the
-API::Client::Credentials class.
+[API::Client::Credentials](https://metacpan.org/pod/API::Client::Credentials) class.
 
 ## identifier
 

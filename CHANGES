@@ -1,6 +1,10 @@
 Changelog for API-Client
 
-0.03 2015-10-10T02:25:10
+0.04 2015-10-11T06:18:18
+ - Updated POD.
+
+0.03 2015-10-10T02:25:15
+ - v0.03
  - Updated build.
  - Updated dependencies, exception handling, and added support for
    credentials.
