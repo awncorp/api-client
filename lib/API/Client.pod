@@ -1,0 +1,458 @@
+
+=encoding utf8
+
+=head1 NAME
+
+API::Client
+
+=cut
+
+=head1 ABSTRACT
+
+HTTP API Thin-Client Abstraction
+
+=cut
+
+=head1 SYNOPSIS
+
+  package main;
+
+  use API::Client;
+
+  my $client = API::Client->new(url => 'https://httpbin.org');
+
+  # $client->resource('post');
+
+  # $client->update(json => {...});
+
+=cut
+
+=head1 DESCRIPTION
+
+This package provides an abstraction and method for rapidly developing HTTP API
+clients.
+
+=cut
+
+=head1 INTEGRATES
+
+This package integrates behaviors from:
+
+L<Data::Object::Role::Buildable>
+
+L<Data::Object::Role::Stashable>
+
+L<Data::Object::Role::Throwable>
+
+=cut
+
+=head1 LIBRARIES
+
+This package uses type constraints from:
+
+L<Types::Standard>
+
+=cut
+
+=head1 ATTRIBUTES
+
+This package has the following attributes:
+
+=cut
+
+=head2 debug
+
+  debug(Bool)
+
+This attribute is read-only, accepts C<(Bool)> values, and is optional.
+
+=cut
+
+=head2 fatal
+
+  fatal(Bool)
+
+This attribute is read-only, accepts C<(Bool)> values, and is optional.
+
+=cut
+
+=head2 logger
+
+  logger(InstanceOf["FlightRecorder"])
+
+This attribute is read-only, accepts C<(InstanceOf["FlightRecorder"])> values, and is optional.
+
+=cut
+
+=head2 name
+
+  name(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head2 retries
+
+  retries(Int)
+
+This attribute is read-only, accepts C<(Int)> values, and is optional.
+
+=cut
+
+=head2 timeout
+
+  timeout(Int)
+
+This attribute is read-only, accepts C<(Int)> values, and is optional.
+
+=cut
+
+=head2 url
+
+  url(InstanceOf["Mojo::URL"])
+
+This attribute is read-only, accepts C<(InstanceOf["Mojo::URL"])> values, and is optional.
+
+=cut
+
+=head2 user_agent
+
+  user_agent(InstanceOf["Mojo::UserAgent"])
+
+This attribute is read-only, accepts C<(InstanceOf["Mojo::UserAgent"])> values, and is optional.
+
+=cut
+
+=head2 version
+
+  version(Str)
+
+This attribute is read-only, accepts C<(Str)> values, and is optional.
+
+=cut
+
+=head1 METHODS
+
+This package implements the following methods:
+
+=cut
+
+=head2 create
+
+  create(Any %args) : InstanceOf["Mojo::Transaction"]
+
+The create method issues a C<POST> request to the API resource represented by
+the object.
+
+=over 4
+
+=item create example #1
+
+  # given: synopsis
+
+  $client->resource('post')->create(
+    json => {active => 1}
+  );
+
+=back
+
+=cut
+
+=head2 delete
+
+  delete(Any %args) : InstanceOf["Mojo::Transaction"]
+
+The delete method issues a C<DELETE> request to the API resource represented by
+the object.
+
+=over 4
+
+=item delete example #1
+
+  # given: synopsis
+
+  $client->resource('delete')->delete;
+
+=back
+
+=cut
+
+=head2 dispatch
+
+  dispatch(Str :$method = 'get', Any %args) : InstanceOf["Mojo::Transaction"]
+
+The dispatch method issues a request to the API resource represented by the
+object.
+
+=over 4
+
+=item dispatch example #1
+
+  # given: synopsis
+
+  $client->resource('get')->dispatch;
+
+=back
+
+=over 4
+
+=item dispatch example #2
+
+  # given: synopsis
+
+  $client->resource('post')->dispatch(
+    method => 'post', body => 'active=1'
+  );
+
+=back
+
+=over 4
+
+=item dispatch example #3
+
+  # given: synopsis
+
+  $client->resource('get')->dispatch(
+    method => 'get', query => {active => 1}
+  );
+
+=back
+
+=over 4
+
+=item dispatch example #4
+
+  # given: synopsis
+
+  $client->resource('post')->dispatch(
+    method => 'post', json => {active => 1}
+  );
+
+=back
+
+=over 4
+
+=item dispatch example #5
+
+  # given: synopsis
+
+  $client->resource('post')->dispatch(
+    method => 'post', form => {active => 1}
+  );
+
+=back
+
+=over 4
+
+=item dispatch example #6
+
+  # given: synopsis
+
+  $client->resource('put')->dispatch(
+    method => 'put', json => {active => 1}
+  );
+
+=back
+
+=over 4
+
+=item dispatch example #7
+
+  # given: synopsis
+
+  $client->resource('patch')->dispatch(
+    method => 'patch', json => {active => 1}
+  );
+
+=back
+
+=over 4
+
+=item dispatch example #8
+
+  # given: synopsis
+
+  $client->resource('delete')->dispatch(
+    method => 'delete', json => {active => 1}
+  );
+
+=back
+
+=cut
+
+=head2 fetch
+
+  fetch(Any %args) : InstanceOf["Mojo::Transaction"]
+
+The fetch method issues a C<GET> request to the API resource represented by the
+object.
+
+=over 4
+
+=item fetch example #1
+
+  # given: synopsis
+
+  $client->resource('get')->fetch;
+
+=back
+
+=cut
+
+=head2 patch
+
+  patch(Any %args) : InstanceOf["Mojo::Transaction"]
+
+The patch method issues a C<PATCH> request to the API resource represented by
+the object.
+
+=over 4
+
+=item patch example #1
+
+  # given: synopsis
+
+  $client->resource('patch')->patch(
+    json => {active => 1}
+  );
+
+=back
+
+=cut
+
+=head2 prepare
+
+  prepare(Object $ua, Object $tx, Any %args) : Object
+
+The prepare method acts as a C<before> hook triggered before each request where
+you can modify the transactor objects.
+
+=over 4
+
+=item prepare example #1
+
+  # given: synopsis
+
+  require Mojo::UserAgent;
+  require Mojo::Transaction::HTTP;
+
+  $client->prepare(
+    Mojo::UserAgent->new,
+    Mojo::Transaction::HTTP->new
+  );
+
+=back
+
+=cut
+
+=head2 process
+
+  process(Object $ua, Object $tx, Any %args) : Object
+
+The process method acts as an C<after> hook triggered after each response where
+you can modify the transactor objects.
+
+=over 4
+
+=item process example #1
+
+  # given: synopsis
+
+  require Mojo::UserAgent;
+  require Mojo::Transaction::HTTP;
+
+  $client->process(
+    Mojo::UserAgent->new,
+    Mojo::Transaction::HTTP->new
+  );
+
+=back
+
+=cut
+
+=head2 resource
+
+  resource(Str @segments) : Object
+
+The resource method returns a new instance of the object for the API resource
+endpoint specified.
+
+=over 4
+
+=item resource example #1
+
+  # given: synopsis
+
+  $client->resource('status', 200);
+
+=back
+
+=cut
+
+=head2 serialize
+
+  serialize() : HashRef
+
+The serialize method serializes and returns the object as a C<hashref>.
+
+=over 4
+
+=item serialize example #1
+
+  # given: synopsis
+
+  $client->serialize;
+
+=back
+
+=cut
+
+=head2 update
+
+  update(Any %args) : InstanceOf["Mojo::Transaction"]
+
+The update method issues a C<PUT> request to the API resource represented by
+the object.
+
+=over 4
+
+=item update example #1
+
+  # given: synopsis
+
+  $client->resource('put')->update(
+    json => {active => 1}
+  );
+
+=back
+
+=cut
+
+=head1 AUTHOR
+
+Al Newkirk, C<awncorp@cpan.org>
+
+=head1 LICENSE
+
+Copyright (C) 2011-2019, Al Newkirk, et al.
+
+This is free software; you can redistribute it and/or modify it under the terms
+of the The Apache License, Version 2.0, as elucidated in the L<"license
+file"|https://github.com/iamalnewkirk/api-client/blob/master/LICENSE>.
+
+=head1 PROJECT
+
+L<Wiki|https://github.com/iamalnewkirk/api-client/wiki>
+
+L<Project|https://github.com/iamalnewkirk/api-client>
+
+L<Initiatives|https://github.com/iamalnewkirk/api-client/projects>
+
+L<Milestones|https://github.com/iamalnewkirk/api-client/milestones>
+
+L<Contributing|https://github.com/iamalnewkirk/api-client/blob/master/CONTRIBUTE.md>
+
+L<Issues|https://github.com/iamalnewkirk/api-client/issues>
+
+=cut

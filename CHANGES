@@ -1,20 +1,14 @@
 Changelog for API-Client
 
-0.04 2015-10-11T06:18:18
- - Updated POD.
-
-0.03 2015-10-10T02:25:15
- - v0.03
+0.10 2020-03-24T22:09:31
+ - Added release updates
+ - Refactored with Mojolicious and FlightRecorder
  - Updated build.
+ - Updated POD.
+ - v0.03
  - Updated dependencies, exception handling, and added support for
    credentials.
-
-0.02 2015-09-28T13:04:06
  - v0.02
- - Updated build.
  - Updated the dist.ini file.
-
-0.01 2015-09-27T22:05:15
  - v0.01
- - Updated build.
  - Initial commit.
