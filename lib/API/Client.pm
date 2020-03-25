@@ -157,9 +157,19 @@ method process(Object $ua, Object $tx, Any %args) {
 }
 
 method resource(Str @segments) {
-  my $object = ref($self)->new($self->serialize);
+  my $url;
 
-  $object->url->path(join '/', @segments) if @segments;
+  if (@segments) {
+    $url = $self->url->clone;
+
+    $url->path->merge(
+      join '/', @{$self->url->path->parts}, @segments
+    );
+  }
+
+  my $object = ref($self)->new(
+    %{$self->serialize}, ($url ? ('url', $url) : ())
+  );
 
   return $object;
 }
