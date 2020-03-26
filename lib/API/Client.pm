@@ -70,7 +70,7 @@ has 'timeout' => (
 has 'url' => (
   is => 'ro',
   isa => 'InstanceOf["Mojo::URL"]',
-  req => 1,
+  opt => 1,
 );
 
 has 'user_agent' => (
@@ -96,14 +96,19 @@ fun new_version($self) {
 # BUILD
 
 method build_args($args) {
-  if (!$args->{url}) {
-    $args->{url} = join('/', @{$self->base(%$args)}) if $self->can('base');
-  }
   if (!ref $args->{url}) {
     $args->{url} = Mojo::URL->new($args->{url}) if $args->{url};
   }
 
   return $args;
+}
+
+method build_self($args) {
+  if (!$self->{url} && $self->can('base')) {
+    $self->{url} = Mojo::URL->new(join('/', @{$self->base($args)}));
+  }
+
+  return $self;
 }
 
 # METHODS
@@ -163,7 +168,7 @@ method resource(Str @segments) {
     $url = $self->url->clone;
 
     $url->path->merge(
-      join '/', @{$self->url->path->parts}, @segments
+      join '/', '', @{$self->url->path->parts}, @segments
     );
   }
 
